@@ -19,7 +19,7 @@
 - STAR ( 2.7.6a ) 
 - samtools ( 0.1.18 )  
 - HTSeq-count ( 0.12.4 ) 
-- R ( 4.1.2 )
+- R ( 4.1.2 ) 
 -- RColorBrewer
 -- gplots
 -- DESeq2
