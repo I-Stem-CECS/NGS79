@@ -25,6 +25,14 @@
 
 ## DEG results 
 
+|  | Down  | Up | Total |
+| :------------------------- | :----:  | :----: | :----: |
+| CTL WT vs CTL KO | 27 | 5 | 32 |
+| CTL AAV KO vs CTL KO | 1 | 8 | 9 |
+| KO AAV RAPA vs CTL KO | 8 | 0 | 8 |
+| KO AAV RAPA vs CTL AAV KO | 0 | 0 | 0 |
+| KO AAV RAPA vs RAPA KO | 3 | 3 | 6 |
+| CTL WT vs RAPA KO | 85 | 18 | 103 |
 
 
 ## Details samples 
