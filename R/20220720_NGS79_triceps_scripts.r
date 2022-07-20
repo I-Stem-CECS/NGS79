@@ -36,31 +36,13 @@ coldata$Treatment <- as.factor(coldata$Treatment)
 
 rawcts <- rawcts[,c(rownames(coldata))]
 
-
-cts.0 <- cts[which(rownames(cts) %in% names_genes$id_ensembl),] # 55471
-
-counts_raw <- data.frame(symbol=NA, cts.0)
-for (i in 1:nrow(counts_raw) ){
-  counts_raw[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_raw)[i]),2]
-}
-write.table(counts_raw,file="../results/NGS79_readscounts_raw_55471enes.csv", sep=";")
-
-cts.0.norm <- counts(dds, norm=T)
-cts.0.norm <- cts.0.norm[which(rownames(cts) %in% names_genes$id_ensembl),]
-
-counts_normalise_HP <- data.frame(symbol=NA, cts.0.norm)
-for (i in 1:nrow(counts_normalise_HP) ){
-  counts_normalise_HP[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_normalise_HP)[i]),2]
-}
-write.table(counts_normalise_HP,file="../results/NGS79_readscounts_norm_55471genes.csv", sep=";")
-
-cts.1 <- data.frame(cts.0, moy=NA)
+cts.1 <- data.frame(rawcts, moy=NA)
 for (i in 1:nrow(cts.1)){
-  cts.1[i, "moy"] <- mean(as.numeric(cts.1[i , c(1:ncol(cts))]))
+  cts.1[i, "moy"] <- mean(as.numeric(cts.1[i , c(1:ncol(rawcts))]))
 }
 cts.2 <- cts.1[which(cts.1$moy > 5),]
-cts.filtre <- cts.2[, c(1:ncol(cts))] # 14608
-colnames(cts.filtre) <- colnames(cts)
+cts.filtre <- cts.2[, c(1:ncol(rawcts))] # 14019
+colnames(cts.filtre) <- colnames(rawcts)
 
 ##################################
 ####### dds cts.filtre coldata ###
@@ -70,12 +52,12 @@ cts.filtre <- cts.filtre[,c(order(colnames(cts.filtre)))]
 coldata <- coldata[order(coldata$sampleName),]
 
 dds <- DESeqDataSetFromMatrix(countData = cts.filtre, colData = coldata,
-                              design = ~ condition + tissus )
+                              design = ~ condition )
 dds <- DESeq(dds)
 
-####################################
+###################################
 ## Comptages bruts et Normalisés ##
-####################################
+###################################
 
 #### Bruts
 counts_raw_HP <- counts(dds, norm=F)
@@ -85,7 +67,7 @@ for (i in 1:nrow(counts_raw) ){
         counts_raw[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_raw)[i]),2]
 }
 
-write.table(counts_raw,file="../results/NGS79_readscounts_raw_14608genes.csv", sep=";")
+write.table(counts_raw,file="../results/triceps/NGS79_Triceps_readscounts_raw_14019genes.csv", sep=";")
 
 #### Norm
 counts_normalise <- counts(dds, norm=T)
@@ -94,7 +76,7 @@ for (i in 1:nrow(counts_normalise) ){
         counts_normalise_HP[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_normalise_HP)[i]),2]
 }
 
-write.table(counts_normalise_HP,file="../results/NGS79_readscounts_norm_14608genes.csv", sep=";", dec=",")
+write.table(counts_normalise_HP,file="../results/triceps/GS79_Tricpes_readscounts_norm_14019genes.csv", sep=";", dec=",")
 
 
 #### GENERAL VIEW ###
@@ -103,7 +85,7 @@ rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
-pdf("../results/plots_general_view_NGS79.pdf")
+pdf("../results/triceps/plots_general_view_Tricpes_NGS79.pdf")
 
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
 names(condcols)=unique(coldata$condition)
@@ -116,10 +98,10 @@ barplot(colSums(counts(dds, normalized=T)), col=condcols[as.factor(coldata$condi
         las=2,cex.names=0.4,
         main='Post Normalised Counts')
 
-pcaData <- plotPCA(rld, intgroup=c("condition", "tissus"), returnData=TRUE)
+pcaData <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
+ggplot(pcaData, aes(PC1, PC2, color=condition)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
@@ -128,6 +110,19 @@ ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
 
 sampleDists <- dist( t( assay(rld) ) )
 sampleDistMatrix <- as.matrix( sampleDists )
+
+colnames(sampleDistMatrix) <- c("E1_CTL_WT", "E11_CTL_KO", "E12_CTL_KO", "E13_CTL_KO", 
+                           "E14_CTL_KO", "E15_RAPA_KO", "E16_RAPA_KO", "E17_RAPA_KO",
+                           "E18_CTL_AAV_KO", "E19_CTL_AAV_KO", "E20_CTL_AAV_KO", 
+                           "E22_CTL_AAV_KO", "E23_RAPA_AAV_KO", "E24_RAPA_AAV_KO", "E25_RAPA_AAV_KO",
+                           "E26_RAPA_AAV_KO", "E3_CTL_WT", "E5_CTL_WT")
+
+rownames(sampleDistMatrix) <- c("E1_CTL_WT", "E11_CTL_KO", "E12_CTL_KO", "E13_CTL_KO", 
+                           "E14_CTL_KO", "E15_RAPA_KO", "E16_RAPA_KO", "E17_RAPA_KO",
+                           "E18_CTL_AAV_KO", "E19_CTL_AAV_KO", "E20_CTL_AAV_KO", 
+                           "E22_CTL_AAV_KO", "E23_RAPA_AAV_KO", "E24_RAPA_AAV_KO", "E25_RAPA_AAV_KO",
+                           "E26_RAPA_AAV_KO", "E3_CTL_WT", "E5_CTL_WT")
+
 colours = colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
 heatmap.2( sampleDistMatrix, trace="none", col=colours, margins=c(15,15), cexRow=0.5, cexCol=0.5)
 
@@ -147,18 +142,17 @@ dev.off()
 # Classic palette BuPu, with 4 colors
 coul <- brewer.pal(4, "PuOr") 
 # Add more colors to this palette :
-coul <- colorRampPalette(coul)(18)
+coul <- colorRampPalette(coul)(8)
 
-annotation_col <- data.frame( condition = coldata$condition, tissus = coldata$tissus, mouse = coldata$mouse) #, genotype = coldata$genotype )
+annotation_col <- data.frame( condition = coldata$condition, Breading = coldata$Breading) #, genotype = coldata$genotype )
 rownames(annotation_col) <- rownames(coldata)
-mat_colors <- list(condition = brewer.pal(5, "Spectral"), tissus = c("firebrick", "steelblue") , mouse =  coul) #  , genotype = c("mediumpurple", "hotpink4"))
+mat_colors <- list(condition = brewer.pal(5, "Spectral"), Breading =  coul) #  , genotype = c("mediumpurple", "hotpink4"))
 names(mat_colors$condition) <- unique(coldata$condition)
-names(mat_colors$tissus) <- unique(coldata$tissus)
-names(mat_colors$mouse) <- unique(coldata$mouse)
+names(mat_colors$Breading) <- unique(coldata$Breading)
 
 #cts.NGS66.2 <- cts.NGS66[,c(2:ncol(cts.NGS66))]
 cts.norm.df <- as.data.frame(counts_normalise)
-png("../results/NGS79_pheatmap_counts_14608.png" , width = 1000, height = 1000)
+png("../results/triceps/NGS79_Triceps_pheatmap_counts_14608.png" , width = 1000, height = 1000)
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, 
           cluster_cols=TRUE, annotation_col = annotation_col ,
@@ -166,7 +160,7 @@ pheatmap( log10(cts.norm.df + 1),
 dev.off()
 
 
-png("../results/NGS79_pheatmap_counts_viridis_14608.png" , width = 1000, height = 1000)
+png("../results/triceps/NGS79_Triceps_pheatmap_counts_viridis_14608.png" , width = 1000, height = 1000)
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, 
           cluster_cols=TRUE, annotation_col = annotation_col ,color = viridis(250),
