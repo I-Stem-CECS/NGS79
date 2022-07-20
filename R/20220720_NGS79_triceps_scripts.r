@@ -783,7 +783,7 @@ drawLines <- function() abline(h=c(-0.4,0.4),col="dodgerblue",lwd=2)
 plotMA(resGA, ylim=ylim); drawLines()
 
 
-pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
+pcaData <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
 ggplot(pcaData, aes(PC1, PC2, color=condition)) +
@@ -904,8 +904,6 @@ finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
 write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
-
-
 ##############################
 ### RAPA_AAV_KO vs RAPA_KO ###
 ##############################
@@ -936,11 +934,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 205
+# 25
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 181
+# 23
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 24
+# 2
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -968,7 +966,7 @@ drawLines <- function() abline(h=c(-0.4,0.4),col="dodgerblue",lwd=2)
 plotMA(resGA, ylim=ylim); drawLines()
 
 
-pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
+pcaData <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
 ggplot(pcaData, aes(PC1, PC2, color=condition)) +
