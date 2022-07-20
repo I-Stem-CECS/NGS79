@@ -25,6 +25,8 @@
 
 ## DEG results 
 
+### All tissus
+
 |  | Down  | Up | Total |
 | :------------------------- | :----:  | :----: | :----: |
 | CTL WT vs CTL KO | 27 | 5 | 32 |
@@ -33,6 +35,28 @@
 | KO AAV RAPA vs CTL AAV KO | 0 | 0 | 0 |
 | KO AAV RAPA vs RAPA KO | 3 | 3 | 6 |
 | CTL WT vs RAPA KO | 85 | 18 | 103 |
+
+### Only Triceps 
+
+|  | Down  | Up | Total |
+| :------------------------- | :----:  | :----: | :----: |
+| CTL WT vs CTL KO | 181 | 24 | 205 |
+| CTL AAV KO vs CTL KO | 0 | 0 | 0 |
+| KO AAV RAPA vs CTL KO | 30 | 3 | 33 |
+| KO AAV RAPA vs CTL AAV KO | 0 | 1 | 1 |
+| KO AAV RAPA vs RAPA KO | 23 | 2 | 25 |
+| CTL WT vs RAPA KO | 175 | 54 | 229 |
+
+### Only Liver 
+
+|  | Down  | Up | Total |
+| :------------------------- | :----:  | :----: | :----: |
+| CTL WT vs CTL KO | 21 | 11 | 32 |
+| CTL AAV KO vs CTL KO | 24 | 78 | 102 |
+| KO AAV RAPA vs CTL KO | 22 | 18 | 40 |
+| KO AAV RAPA vs CTL AAV KO | 9 | 5 | 14 |
+| KO AAV RAPA vs RAPA KO | 1 | 3 | 4 |
+| CTL WT vs RAPA KO | 60 | 35 | 95 |
 
 
 ## Details samples 
