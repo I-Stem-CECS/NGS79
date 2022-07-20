@@ -567,11 +567,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 205
+# 33
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 181
+# 30
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 24
+# 3
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
