@@ -1118,11 +1118,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 205
+# 229
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 181
+# 175
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 24
+# 54
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -1150,7 +1150,7 @@ drawLines <- function() abline(h=c(-0.4,0.4),col="dodgerblue",lwd=2)
 plotMA(resGA, ylim=ylim); drawLines()
 
 
-pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
+pcaData <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
 ggplot(pcaData, aes(PC1, PC2, color=condition)) +
