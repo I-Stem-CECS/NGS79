@@ -1,5 +1,5 @@
 # 2022-07-20 NGS79 
-# tissus specific : triceps
+# tissus specific : Liver
 # RNAseq 
 
 
@@ -24,7 +24,7 @@ colnames(names_genes) <- c("id_ensembl","name_gene")
 coldata <- read.csv2("./coldata.csv", sep="\t", header=T)
 rownames(coldata) <- coldata$sampleName
 
-coldata <- coldata[which(coldata$tissus %in% "Triceps"),]
+coldata <- coldata[which(coldata$tissus %in% "Liver"),]
 
 coldata$condition <- as.factor(coldata$condition)
 coldata$Genotype <- as.factor(coldata$Genotype)
@@ -67,7 +67,7 @@ for (i in 1:nrow(counts_raw) ){
         counts_raw[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_raw)[i]),2]
 }
 
-write.table(counts_raw,file="../results/triceps/NGS79_Triceps_readscounts_raw_14019genes.csv", sep=";")
+write.table(counts_raw,file="../results/Liver/NGS79_Liver_readscounts_raw_14019genes.csv", sep=";")
 
 #### Norm
 counts_normalise <- counts(dds, norm=T)
@@ -76,7 +76,7 @@ for (i in 1:nrow(counts_normalise) ){
         counts_normalise_HP[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_normalise_HP)[i]),2]
 }
 
-write.table(counts_normalise_HP,file="../results/triceps/GS79_Tricpes_readscounts_norm_14019genes.csv", sep=";", dec=",")
+write.table(counts_normalise_HP,file="../results/Liver/GS79_Tricpes_readscounts_norm_14019genes.csv", sep=";", dec=",")
 
 
 #### GENERAL VIEW ###
@@ -85,7 +85,7 @@ rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
-pdf("../results/triceps/plots_general_view_Tricpes_NGS79.pdf")
+pdf("../results/Liver/plots_general_view_Tricpes_NGS79.pdf")
 
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
 names(condcols)=unique(coldata$condition)
@@ -152,7 +152,7 @@ names(mat_colors$Breading) <- unique(coldata$Breading)
 
 #cts.NGS66.2 <- cts.NGS66[,c(2:ncol(cts.NGS66))]
 cts.norm.df <- as.data.frame(counts_normalise)
-png("../results/triceps/NGS79_Triceps_pheatmap_counts_14019.png" , width = 1000, height = 1000)
+png("../results/Liver/NGS79_Liver_pheatmap_counts_14019.png" , width = 1000, height = 1000)
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, 
           cluster_cols=TRUE, annotation_col = annotation_col ,
@@ -160,7 +160,7 @@ pheatmap( log10(cts.norm.df + 1),
 dev.off()
 
 
-png("../results/triceps/NGS79_Triceps_pheatmap_counts_viridis_14019.png" , width = 1000, height = 1000)
+png("../results/Liver/NGS79_Liver_pheatmap_counts_viridis_14019.png" , width = 1000, height = 1000)
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, 
           cluster_cols=TRUE, annotation_col = annotation_col ,color = viridis(250),
@@ -208,7 +208,7 @@ vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/Liver/plots_Liver_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -316,7 +316,7 @@ for (i in 1:nrow(mat_sig) ){
 	mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/Liver/",cdition1,"-vs-", cdition2Ctrl,"_Liver_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -344,10 +344,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
@@ -392,7 +392,7 @@ vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/Liver/plots_Liver_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -500,7 +500,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/Liver/",cdition1,"-vs-", cdition2Ctrl,"_Liver_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -528,10 +528,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
@@ -578,7 +578,7 @@ vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/Liver/plots_Liver_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -686,7 +686,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/Liver/",cdition1,"-vs-", cdition2Ctrl,"_Liver_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -714,10 +714,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
@@ -762,7 +762,7 @@ vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/Liver/plots_Liver_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -870,7 +870,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/Liver/",cdition1,"-vs-", cdition2Ctrl,"_Liver_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -898,10 +898,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 ##############################
@@ -945,7 +945,7 @@ vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/Liver/plots_Liver_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -1053,7 +1053,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/Liver/",cdition1,"-vs-", cdition2Ctrl,"_Liver_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -1081,10 +1081,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
@@ -1129,7 +1129,7 @@ vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/Liver/plots_Liver_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -1237,7 +1237,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/Liver/",cdition1,"-vs-", cdition2Ctrl,"_Liver_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -1265,10 +1265,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/Liver/NGS79_Liver_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
