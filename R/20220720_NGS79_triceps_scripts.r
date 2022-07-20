@@ -371,7 +371,7 @@ dds <- DESeqDataSetFromMatrix(countData = cts.filtre[ ,
                                                       )], 
                               colData = coldata[which((coldata$condition %in% cdition1) | 
                                                         (coldata$condition %in% cdition2Ctrl) ),] , 
-                              design = ~ condition + tissus)
+                              design = ~ condition )
 
 
 
@@ -381,18 +381,18 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 9
+# 0
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 1
+# 0
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 8
+# 0
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/plots_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -413,10 +413,10 @@ drawLines <- function() abline(h=c(-0.4,0.4),col="dodgerblue",lwd=2)
 plotMA(resGA, ylim=ylim); drawLines()
 
 
-pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
+pcaData <- plotPCA(rld, intgroup=c("condition"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
+ggplot(pcaData, aes(PC1, PC2, color=condition)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
@@ -472,13 +472,11 @@ legend("topright", fill=rev(colori), legend=rev(names(colori)))
 counts_normalise <- counts(dds, norm=T)
 cts.norm.df <- as.data.frame(counts_normalise)
 
-annotation_col <- data.frame( condition = coldata$condition, tissus = coldata$tissus )
+annotation_col <- data.frame( condition = coldata$condition )
 rownames(annotation_col) <- rownames(coldata)
-mat_colors <- list(condition = c("firebrick", "steelblue")  , 
-                   tissus = c(coul[1], coul[18])
-)
+mat_colors <- list(condition = c("firebrick", "steelblue"))
 names(mat_colors$condition) <- c(cdition1, cdition2Ctrl)
-names(mat_colors$tissus) <- unique(coldata$tissus)
+
 
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, color = viridis(250),
@@ -502,7 +500,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/",cdition1,"-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -530,10 +528,11 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+
 
 
 
@@ -558,7 +557,7 @@ dds <- DESeqDataSetFromMatrix(countData = cts.filtre[ ,
                                                       )], 
                               colData = coldata[which((coldata$condition %in% cdition1) | 
                                                         (coldata$condition %in% cdition2Ctrl) ),] , 
-                              design = ~ condition + tissus)
+                              design = ~ condition )
 
 
 
@@ -568,18 +567,18 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 8
+# 205
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 8
+# 181
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 0
+# 24
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/plots_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -603,7 +602,7 @@ plotMA(resGA, ylim=ylim); drawLines()
 pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
+ggplot(pcaData, aes(PC1, PC2, color=condition)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
@@ -659,13 +658,11 @@ legend("topright", fill=rev(colori), legend=rev(names(colori)))
 counts_normalise <- counts(dds, norm=T)
 cts.norm.df <- as.data.frame(counts_normalise)
 
-annotation_col <- data.frame( condition = coldata$condition, tissus = coldata$tissus )
+annotation_col <- data.frame( condition = coldata$condition )
 rownames(annotation_col) <- rownames(coldata)
-mat_colors <- list(condition = c("firebrick", "steelblue")  , 
-                   tissus = c(coul[1], coul[18])
-)
+mat_colors <- list(condition = c("firebrick", "steelblue"))
 names(mat_colors$condition) <- c(cdition1, cdition2Ctrl)
-names(mat_colors$tissus) <- unique(coldata$tissus)
+
 
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, color = viridis(250),
@@ -689,7 +686,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/",cdition1,"-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -717,10 +714,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
@@ -744,7 +741,7 @@ dds <- DESeqDataSetFromMatrix(countData = cts.filtre[ ,
                                                       )], 
                               colData = coldata[which((coldata$condition %in% cdition1) | 
                                                         (coldata$condition %in% cdition2Ctrl) ),] , 
-                              design = ~ condition + tissus)
+                              design = ~ condition )
 
 
 
@@ -754,18 +751,18 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 0
+# 205
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 0
+# 181
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 0
+# 24
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/plots_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -789,7 +786,7 @@ plotMA(resGA, ylim=ylim); drawLines()
 pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
+ggplot(pcaData, aes(PC1, PC2, color=condition)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
@@ -845,13 +842,11 @@ legend("topright", fill=rev(colori), legend=rev(names(colori)))
 counts_normalise <- counts(dds, norm=T)
 cts.norm.df <- as.data.frame(counts_normalise)
 
-annotation_col <- data.frame( condition = coldata$condition, tissus = coldata$tissus )
+annotation_col <- data.frame( condition = coldata$condition )
 rownames(annotation_col) <- rownames(coldata)
-mat_colors <- list(condition = c("firebrick", "steelblue")  , 
-                   tissus = c(coul[1], coul[18])
-)
+mat_colors <- list(condition = c("firebrick", "steelblue"))
 names(mat_colors$condition) <- c(cdition1, cdition2Ctrl)
-names(mat_colors$tissus) <- unique(coldata$tissus)
+
 
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, color = viridis(250),
@@ -875,7 +870,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/",cdition1,"-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -903,10 +898,11 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
+
 
 
 
@@ -930,7 +926,7 @@ dds <- DESeqDataSetFromMatrix(countData = cts.filtre[ ,
                                                       )], 
                               colData = coldata[which((coldata$condition %in% cdition1) | 
                                                         (coldata$condition %in% cdition2Ctrl) ),] , 
-                              design = ~ condition + tissus)
+                              design = ~ condition )
 
 
 
@@ -940,18 +936,18 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 6
+# 205
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 3
+# 181
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 3
+# 24
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/plots_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -975,7 +971,7 @@ plotMA(resGA, ylim=ylim); drawLines()
 pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
+ggplot(pcaData, aes(PC1, PC2, color=condition)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
@@ -1031,13 +1027,11 @@ legend("topright", fill=rev(colori), legend=rev(names(colori)))
 counts_normalise <- counts(dds, norm=T)
 cts.norm.df <- as.data.frame(counts_normalise)
 
-annotation_col <- data.frame( condition = coldata$condition, tissus = coldata$tissus )
+annotation_col <- data.frame( condition = coldata$condition )
 rownames(annotation_col) <- rownames(coldata)
-mat_colors <- list(condition = c("firebrick", "steelblue")  , 
-                   tissus = c(coul[1], coul[18])
-)
+mat_colors <- list(condition = c("firebrick", "steelblue"))
 names(mat_colors$condition) <- c(cdition1, cdition2Ctrl)
-names(mat_colors$tissus) <- unique(coldata$tissus)
+
 
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, color = viridis(250),
@@ -1061,7 +1055,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/",cdition1,"-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -1089,11 +1083,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
-
+write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
@@ -1117,7 +1110,7 @@ dds <- DESeqDataSetFromMatrix(countData = cts.filtre[ ,
                                                       )], 
                               colData = coldata[which((coldata$condition %in% cdition1) | 
                                                         (coldata$condition %in% cdition2Ctrl) ),] , 
-                              design = ~ condition + tissus)
+                              design = ~ condition )
 
 
 
@@ -1127,18 +1120,18 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 103
+# 205
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 85
+# 181
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 18
+# 24
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
 
-pdf(paste0("../results/plots_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
+pdf(paste0("../results/triceps/plots_Triceps_",cdition1,"-vs-",cdition2Ctrl,"_NGS79.pdf"))
 
 hmcol = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
@@ -1162,7 +1155,7 @@ plotMA(resGA, ylim=ylim); drawLines()
 pcaData <- plotPCA(rld, intgroup=c("condition","tissus"), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
 
-ggplot(pcaData, aes(PC1, PC2, color=condition, shape=tissus)) +
+ggplot(pcaData, aes(PC1, PC2, color=condition)) +
   geom_point(size=3) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
   ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
@@ -1218,13 +1211,11 @@ legend("topright", fill=rev(colori), legend=rev(names(colori)))
 counts_normalise <- counts(dds, norm=T)
 cts.norm.df <- as.data.frame(counts_normalise)
 
-annotation_col <- data.frame( condition = coldata$condition, tissus = coldata$tissus )
+annotation_col <- data.frame( condition = coldata$condition )
 rownames(annotation_col) <- rownames(coldata)
-mat_colors <- list(condition = c("firebrick", "steelblue")  , 
-                   tissus = c(coul[1], coul[18])
-)
+mat_colors <- list(condition = c("firebrick", "steelblue"))
 names(mat_colors$condition) <- c(cdition1, cdition2Ctrl)
-names(mat_colors$tissus) <- unique(coldata$tissus)
+
 
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, color = viridis(250),
@@ -1248,7 +1239,7 @@ for (i in 1:nrow(mat_sig) ){
   mat_sig[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(mat_sig)[i]),2]
 }
 
-write.csv2(mat_sig, paste0("../results/",cdition1,"-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(mat_sig, paste0("../results/triceps/",cdition1,"-vs-", cdition2Ctrl,"_Triceps_log2FC0-4.csv"))
 
 ## Formatage I-Stem
 
@@ -1276,13 +1267,10 @@ finalDE <- merge(finalDE, counts_norm_HP, by = "row.names")
 rownames(finalDE) <- finalDE$Row.names
 finalDE <- finalDE[,c(2:ncol(finalDE))]
 
-write.csv2(finalDE, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
+write.csv2(finalDE, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4.csv"))
 finalDE_padj05 <- finalDE[which(finalDE$padj < 0.05 ),]
 finalDE_padj05_BM20 <- finalDE_padj05[which(finalDE_padj05$baseMean >= 20 ),]
-write.csv2(finalDE_padj05_BM20, paste0("../results/NGS79_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
-
-
-
+write.csv2(finalDE_padj05_BM20, paste0("../results/triceps/NGS79_Triceps_", cdition1, "-vs-", cdition2Ctrl,"_log2FC0-4_padj0-5_BM20.csv"))
 
 
 
