@@ -41,7 +41,7 @@ for (i in 1:nrow(cts.1)){
   cts.1[i, "moy"] <- mean(as.numeric(cts.1[i , c(1:ncol(rawcts))]))
 }
 cts.2 <- cts.1[which(cts.1$moy > 5),]
-cts.filtre <- cts.2[, c(1:ncol(rawcts))] # 14019
+cts.filtre <- cts.2[, c(1:ncol(rawcts))] # 13471
 colnames(cts.filtre) <- colnames(rawcts)
 
 ##################################
@@ -67,7 +67,7 @@ for (i in 1:nrow(counts_raw) ){
         counts_raw[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_raw)[i]),2]
 }
 
-write.table(counts_raw,file="../results/Liver/NGS79_Liver_readscounts_raw_14019genes.csv", sep=";")
+write.table(counts_raw,file="../results/Liver/NGS79_Liver_readscounts_raw_13471genes.csv", sep=";")
 
 #### Norm
 counts_normalise <- counts(dds, norm=T)
@@ -76,7 +76,7 @@ for (i in 1:nrow(counts_normalise) ){
         counts_normalise_HP[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_normalise_HP)[i]),2]
 }
 
-write.table(counts_normalise_HP,file="../results/Liver/GS79_Tricpes_readscounts_norm_14019genes.csv", sep=";", dec=",")
+write.table(counts_normalise_HP,file="../results/Liver/GS79_Tricpes_readscounts_norm_13471genes.csv", sep=";", dec=",")
 
 
 #### GENERAL VIEW ###
@@ -85,7 +85,7 @@ rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
 vstMat = assay(vsd)
 
-pdf("../results/Liver/plots_general_view_Tricpes_NGS79.pdf")
+pdf("../results/Liver/plots_general_view_Liver_NGS79.pdf")
 
 condcols=brewer.pal(n = length(unique(coldata$condition)), name = 'Paired')
 names(condcols)=unique(coldata$condition)
@@ -111,17 +111,20 @@ ggplot(pcaData, aes(PC1, PC2, color=condition)) +
 sampleDists <- dist( t( assay(rld) ) )
 sampleDistMatrix <- as.matrix( sampleDists )
 
-colnames(sampleDistMatrix) <- c("E1_CTL_WT", "E11_CTL_KO", "E12_CTL_KO", "E13_CTL_KO", 
-                           "E14_CTL_KO", "E15_RAPA_KO", "E16_RAPA_KO", "E17_RAPA_KO",
-                           "E18_CTL_AAV_KO", "E19_CTL_AAV_KO", "E20_CTL_AAV_KO", 
-                           "E22_CTL_AAV_KO", "E23_RAPA_AAV_KO", "E24_RAPA_AAV_KO", "E25_RAPA_AAV_KO",
-                           "E26_RAPA_AAV_KO", "E3_CTL_WT", "E5_CTL_WT")
+colnames(sampleDistMatrix) <- c("E47_CTL_WT", "E49_CTL_WT", "E51_CTL_WT", "E57_CTL_KO",
+                                "E58_CTL_KO", "E59_CTL_KO", "E60_CTL_KO", "E61_RAPA_KO",
+                                "E62_RAPA_KO", "E63_RAPA_KO", "E64_CTL_AAV_KO",
+                                "E65_CTL_AAV_KO", "E66_CTL_AAV_KO", "E68_CTL_AAV_KO", "E69_RAPA_AAV_KO",
+                                "E70_RAPA_AAV_KO", "E71_RAPA_AAV_KO", "E72_RAPA_AAV_KO")
 
-rownames(sampleDistMatrix) <- c("E1_CTL_WT", "E11_CTL_KO", "E12_CTL_KO", "E13_CTL_KO", 
-                           "E14_CTL_KO", "E15_RAPA_KO", "E16_RAPA_KO", "E17_RAPA_KO",
-                           "E18_CTL_AAV_KO", "E19_CTL_AAV_KO", "E20_CTL_AAV_KO", 
-                           "E22_CTL_AAV_KO", "E23_RAPA_AAV_KO", "E24_RAPA_AAV_KO", "E25_RAPA_AAV_KO",
-                           "E26_RAPA_AAV_KO", "E3_CTL_WT", "E5_CTL_WT")
+
+rownames(sampleDistMatrix) <- c("E47_CTL_WT", "E49_CTL_WT", "E51_CTL_WT", "E57_CTL_KO",
+                                "E58_CTL_KO", "E59_CTL_KO", "E60_CTL_KO", "E61_RAPA_KO",
+                                "E62_RAPA_KO", "E63_RAPA_KO", "E64_CTL_AAV_KO",
+                                "E65_CTL_AAV_KO", "E66_CTL_AAV_KO", "E68_CTL_AAV_KO", "E69_RAPA_AAV_KO",
+                                "E70_RAPA_AAV_KO", "E71_RAPA_AAV_KO", "E72_RAPA_AAV_KO")
+
+
 
 colours = colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
 heatmap.2( sampleDistMatrix, trace="none", col=colours, margins=c(15,15), cexRow=0.5, cexCol=0.5)
@@ -152,7 +155,7 @@ names(mat_colors$Breading) <- unique(coldata$Breading)
 
 #cts.NGS66.2 <- cts.NGS66[,c(2:ncol(cts.NGS66))]
 cts.norm.df <- as.data.frame(counts_normalise)
-png("../results/Liver/NGS79_Liver_pheatmap_counts_14019.png" , width = 1000, height = 1000)
+png("../results/Liver/NGS79_Liver_pheatmap_counts_13471.png" , width = 1000, height = 1000)
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, 
           cluster_cols=TRUE, annotation_col = annotation_col ,
@@ -160,7 +163,7 @@ pheatmap( log10(cts.norm.df + 1),
 dev.off()
 
 
-png("../results/Liver/NGS79_Liver_pheatmap_counts_viridis_14019.png" , width = 1000, height = 1000)
+png("../results/Liver/NGS79_Liver_pheatmap_counts_viridis_13471.png" , width = 1000, height = 1000)
 pheatmap( log10(cts.norm.df + 1), 
           cluster_rows=TRUE, show_rownames=FALSE, 
           cluster_cols=TRUE, annotation_col = annotation_col ,color = viridis(250),
@@ -197,11 +200,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 205
+# 32
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 181
+# 21
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 24
+# 11
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -381,11 +384,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 0
+# 102
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 0
+# 24
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 0
+# 78
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -567,11 +570,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 33
+# 40
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 30
+# 22
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 3
+# 18
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -751,11 +754,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 1
+# 14
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 0
+# 9
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 1
+# 5
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -934,11 +937,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 25
+# 4
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 23
+# 1
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 2
+# 3
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
@@ -1118,11 +1121,11 @@ resGA <- results(dds, contrast=c(contrastO,cdition1,cdition2Ctrl),
                  lfcThreshold=0.4, altHypothesis="greaterAbs")
 
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 ),]))
-# 229
+# 95
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange < 0 ),])) # Down
-# 175
+# 60
 message(nrow(resGA[which((resGA$padj < 0.05) & resGA$baseMean > 20 & resGA$log2FoldChange > 0 ),])) # Up
-# 54
+# 35
 
 rld <- rlogTransformation(dds, blind=TRUE)
 vsd <- varianceStabilizingTransformation(dds, blind=TRUE)
