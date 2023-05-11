@@ -76,7 +76,7 @@ for (i in 1:nrow(counts_normalise) ){
         counts_normalise_HP[i,1] <- names_genes[which(names_genes$id_ensembl %in% rownames(counts_normalise_HP)[i]),2]
 }
 
-write.table(counts_normalise_HP,file="../results/Liver/GS79_Tricpes_readscounts_norm_13471genes.csv", sep=";", dec=",")
+write.table(counts_normalise_HP,file="../results/Liver/NGS79_Liver_readscounts_norm_13471genes.csv", sep=";", dec=",")
 
 
 #### GENERAL VIEW ###

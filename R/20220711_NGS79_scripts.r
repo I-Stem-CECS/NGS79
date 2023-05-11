@@ -2,13 +2,6 @@
 # RNAseq 
 
 
-
-#library(devtools)
-#install_gitlab("LBMC/regards/deseq2-wrapper", host = "https://gitbio.ens-lyon.fr", quiet = FALSE)
-#library(DESeqwrapper)
-#run_deseq2
-
-
 library(RColorBrewer)
 library(gplots)
 library(DESeq2)
