@@ -1,6 +1,7 @@
 *.xlsx*
 *.Rproj
 *.Rhistory
+*.docx
 .Rproj.user/
 data/
 results/
