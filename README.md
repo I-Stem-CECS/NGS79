@@ -1,4 +1,6 @@
-# NGS79
+# Synergism of dual AAV gene therapy and rapamycin rescues GSDIII phenotype in muscle and liver
+
+Louisa Jauze, Mallaury Vie, Quentin Miagoux, Lucille Rossiaud, Patrice Vidal, Valle Montalvo-Romeral, Hanadi Saliba, Margot Jarrige, Helene Polveche, Justine Nozi, Pierre-Romain Le Brun, Luca Bocchialini, Amandine Francois, Jeremie Cosette, Jérémy Rouillon, Fanny Collaud, Fanny Bordier, Emilie Bertil-Froidevaux, Christophe Georger, Laetitia Van Wittenberghe, Adeline Miranda, Nathalie Daniele, David Gross, Lucile Hoch, Xavier Nissan & Giuseppe Ronzitti
 
 ## Description
 
