@@ -2,6 +2,8 @@
 
 Louisa Jauze, Mallaury Vie, Quentin Miagoux, Lucille Rossiaud, Patrice Vidal, Valle Montalvo-Romeral, Hanadi Saliba, Margot Jarrige, Helene Polveche, Justine Nozi, Pierre-Romain Le Brun, Luca Bocchialini, Amandine Francois, Jeremie Cosette, Jérémy Rouillon, Fanny Collaud, Fanny Bordier, Emilie Bertil-Froidevaux, Christophe Georger, Laetitia Van Wittenberghe, Adeline Miranda, Nathalie Daniele, David Gross, Lucile Hoch, Xavier Nissan & Giuseppe Ronzitti
 
+DOI: [10.1172/jci.insight.172614](https://insight.jci.org/articles/view/172614)
+
 ## Description
 
 - Team : [Pharmacologie des dystrophies musculaires](https://www.istem.eu/randd/pharmacologie-des-dystrophies-musculaires/) 
